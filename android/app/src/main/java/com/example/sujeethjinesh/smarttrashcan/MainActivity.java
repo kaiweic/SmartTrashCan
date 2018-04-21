@@ -6,10 +6,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.provider.MediaStore;
-import android.support.v4.content.FileProvider;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -18,9 +16,11 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.clarifai.api.ClarifaiClient;
-import com.clarifai.api.RecognitionRequest;
-import com.clarifai.api.RecognitionResult;
+//import com.clarifai.api.ClarifaiClient;
+//import com.clarifai.api.RecognitionRequest;
+//import com.clarifai.api.RecognitionResult;
+//import com.clarifai.api.Tag;
+
 import com.clarifai.api.Tag;
 
 import java.io.ByteArrayOutputStream;
@@ -28,15 +28,24 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+
+import clarifai2.api.ClarifaiBuilder;
+import clarifai2.api.ClarifaiClient;
+import clarifai2.api.ClarifaiResponse;
+import clarifai2.dto.input.ClarifaiInput;
+import clarifai2.dto.model.output.ClarifaiOutput;
+import clarifai2.dto.prediction.Concept;
 
 public class MainActivity extends AppCompatActivity {
 
     Button analyzeButton;
     ImageView destinationImageView;
     static final int CAM_REQUEST = 1;
-    private final ClarifaiClient clarifaiClient = new ClarifaiClient(Credentials.CLIENT_ID,
-            Credentials.CLIENT_SECRET);
+//    private final ClarifaiClient clarifaiClient = new ClarifaiClient(Credentials.CLIENT_ID,
+//            Credentials.CLIENT_SECRET);
+    private final ClarifaiClient clarifaiClient = new ClarifaiBuilder(Credentials.CLARIFAI_API_KEY).buildSync();
     ArrayList<String> items;
     TextView outputTextView;
 
@@ -70,12 +79,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                File cameraFile = new File(android.os.Environment.getExternalStorageDirectory(), "temp.jpg");
-//                cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(cameraFile));
-//                File file = getFile();
-//                cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(context, getApplicationContext().getPackageName() + ".provider", file));
-                Uri uri  = FileProvider.getUriForFile(MainActivity.this, BuildConfig.APPLICATION_ID + ".provider", cameraFile);
-                cameraIntent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, uri);
                 if (cameraIntent.resolveActivity(getPackageManager()) != null) {
                     startActivityForResult(cameraIntent, CAM_REQUEST);
                 }
@@ -101,30 +104,31 @@ public class MainActivity extends AppCompatActivity {
             destinationImageView.setImageBitmap(bitmap);
 
             // Run recognition on a background thread.
-            new AsyncTask<Bitmap, Void, RecognitionResult>() {
+            new AsyncTask<Bitmap, Void, ClarifaiResponse<List<ClarifaiOutput<Concept>>>>() {
                 @Override
-                protected RecognitionResult doInBackground(Bitmap... bitmaps) {
+                protected ClarifaiResponse<List<ClarifaiOutput<Concept>>> doInBackground(Bitmap... bitmaps) {
                     ByteArrayOutputStream stream = new ByteArrayOutputStream();
                     bitmaps[0].compress(Bitmap.CompressFormat.JPEG, 90, stream);
                     byte[] byteArray = stream.toByteArray();
-                    return clarifaiClient.recognize(new RecognitionRequest(byteArray).setModel("general-v1.3")).get(0);
+                    return clarifaiClient.getDefaultModels().generalModel().predict().withInputs(ClarifaiInput.forImage(byteArray)).executeSync();
+//                    return clarifaiClient.recognize(new RecognitionRequest(byteArray).setModel("general-v1.3")).get(0);
                 }
 
                 @Override
-                protected void onPostExecute(RecognitionResult result) {
+                protected void onPostExecute(ClarifaiResponse<List<ClarifaiOutput<Concept>>> result) {
                     boolean found = false;
                     String foundText = "Trash :(";
-                    for (Tag tag : result.getTags()) {
-                        System.out.println(tag.getName());
-                        if (recyclables.contains(tag.getName())) {
+                    for (Concept tag : result.getOrNull().get(0).data()) {
+                        System.out.println(tag.name());
+                        if (recyclables.contains(tag.name())) {
                             foundText = "Recycle! :)";
                             outputTextView.setTextColor(ResourcesCompat.getColor(getResources(), R.color.pukeGreen, null));
                             found = true;
-                        } else if (compostables.contains(tag.getName())) {
+                        } else if (compostables.contains(tag.name())) {
                             foundText = "Compost! :)";
                             outputTextView.setTextColor(ResourcesCompat.getColor(getResources(), R.color.blue, null));
                             found = true;
-                        } else if (landfill.contains(tag.getName())) {
+                        } else if (landfill.contains(tag.name())) {
                             foundText = "Trash! :(";
                             outputTextView.setTextColor(ResourcesCompat.getColor(getResources(), R.color.heartRed, null));
                             found = true;

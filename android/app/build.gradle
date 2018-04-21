@@ -37,5 +37,6 @@ dependencies {
     compile('com.google.apis:google-api-services-calendar:v3-rev200-1.22.0') {
         exclude group: 'org.apache.httpcomponents'
     }
+    compile 'com.clarifai.clarifai-api2:core:2.3.0'
     compile 'com.android.support.constraint:constraint-layout:1.1.0'
 }

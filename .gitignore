@@ -99,3 +99,7 @@ ENV/
 
 # mypy
 .mypy_cache/
+
+python/env_vars.py
+.idea/
+python/saved_pictures/

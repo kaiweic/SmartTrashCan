@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">SmartTrashCan</string>
+    <string name="find_out_if_your_trash_is_recyclable_compostable_or_landfill">Find out if your trash is recyclable, compostable, or landfill</string>
+    <string name="analyze">Analyze</string>
+</resources>

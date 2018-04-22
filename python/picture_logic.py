@@ -3,7 +3,9 @@ from cv2 import cv2
 
 def take_picture():
     camera = cv2.VideoCapture(0)
-    saved_image_name = 'python/saved_pictures/trash_object.jpg'
+    saved_image_name = 'trash_object.jpg'
+    print(saved_image_name)
+
     while True:
         return_value, raw_image = camera.read()
         display_image = raw_image

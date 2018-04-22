@@ -1,6 +1,6 @@
 import pyrebase
 
-from python.env_vars import firebase_api_key
+from env_vars import firebase_api_key
 
 firebase = None
 db = None

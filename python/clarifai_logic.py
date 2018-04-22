@@ -2,8 +2,8 @@ from clarifai.rest import ClarifaiApp
 from clarifai.rest import Image as ClImage
 import json
 
-from python import env_vars, servo_movement
-from python.TrashCategories import TrashCategories
+import env_vars, servo_movement
+from TrashCategories import TrashCategories
 
 recyclables = {"bottle", "plastic", "cup", "coffee"}
 compost = {"apple", "clementine", "orange", "fruit", "tangerine", "mandarin", "food", "vegetable"}

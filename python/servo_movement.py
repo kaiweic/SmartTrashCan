@@ -1,23 +1,31 @@
 import serial
 
-from python.TrashCategories import TrashCategories
-from python.arduino_envs import ArduinoEnv
+from TrashCategories import TrashCategories
+from arduino_envs import ArduinoEnv
 
-COMPOST_CONFIG = bytes([0])
-LANDFILL_CONFIG = bytes([90])
-RECYCLING_CONFIG = bytes([180])
+COMPOST_CONFIG = bytes([67])
+LANDFILL_CONFIG = bytes([76])
+RECYCLING_CONFIG = bytes([82])
+
+arduino_serial_data = serial.Serial('COM5', 9600)#, timeout=1)
+
+def init():
+        arduino_serial_data.write(b'1');
+        data = arduino_serial_data.readline()
 
 
 def set_servos(can):
-    arduino_serial_data = serial.Serial(ArduinoEnv.LOG_FILE.value, 9600, timeout=1)
     print("in servo movement")
     if can == TrashCategories.COMPOST:
         print("in servo movement compost")
+        print('compost: ', COMPOST_CONFIG)
         arduino_serial_data.write(COMPOST_CONFIG)
         # print(arduino_serial_data.read())
     elif can == TrashCategories.LANDFILL:
         print("in servo movement landfill")
-        arduino_serial_data.write(LANDFILL_CONFIG)
+        print("bytes written: ", arduino_serial_data.write(LANDFILL_CONFIG))
+        print('landfill: ', LANDFILL_CONFIG)
+        #print(arduino_serial_data.readline().decode('utf-8').strip())
         # print(str(arduino_serial_data.read()))
     else:
         print("in servo movement recycling")

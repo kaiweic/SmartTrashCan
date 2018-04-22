@@ -17,25 +17,33 @@ import "whatwg-fetch";
 import firebase from 'firebase';
 import axios from 'axios'
 
+// Initialize Firebase
+let config = {
+  apiKey: "AIzaSyDLxi0Uiyzdt6Qkjh4wX3uVxWKYn4YdsBQ",
+  authDomain: "smarttrashcan-a731b.firebaseapp.com",
+  databaseURL: "https://smarttrashcan-a731b.firebaseio.com",
+  projectId: "smarttrashcan-a731b",
+  storageBucket: "smarttrashcan-a731b.appspot.com",
+  messagingSenderId: "644066905865"
+};
+firebase.initializeApp(config);
+
+// Get a reference to the database service
+let database = firebase.database();
+
 export default class extends React.Component {
     constructor(props) {
-        super(props);
+      super(props);
+      this.state = {
+        data: null
+      };
+    }
 
+    componentDidMount() {
 
-        // Initialize Firebase
-        let config = {
-            apiKey: "AIzaSyDLxi0Uiyzdt6Qkjh4wX3uVxWKYn4YdsBQ",
-            authDomain: "smarttrashcan-a731b.firebaseapp.com",
-            databaseURL: "https://smarttrashcan-a731b.firebaseio.com",
-            projectId: "smarttrashcan-a731b",
-            storageBucket: "smarttrashcan-a731b.appspot.com",
-            messagingSenderId: "644066905865"
-        };
-        firebase.initializeApp(config);
+        let self = this;
 
-        // Get a reference to the database service
-        let database = firebase.database();
-
+        console.log('Test');
         let previous_items = [];
         let current_items = [];
 
@@ -57,41 +65,39 @@ export default class extends React.Component {
 
               current_fullness.can_id = can_id;
               current_items.push(current_fullness);
-              console.log("current_items:")
-              console.log(current_items);
             }
 
             if (current_items === previous_items) {
               return;
             }
-            previous_items = current_items;
+
+            previous_items = JSON.parse(JSON.stringify(current_items));
             current_items = [];
 
-
+            console.log('current items', previous_items);
+            self.setState({
+              data: {
+                items: previous_items
+              }
+            });
         });
-        console.log("this guy:")
-        console.log(current_items);
 
-        this.state = {
-            data: {
-              items: current_items
-            }
-          };
-
-        console.log(self.state);
-        console.log(props);
         //console.log(self.state.data);
     }
 
     render() {
-        console.log(self.state);
-        console.log(this.state);
-        console.log(this.state.data);
-        console.log(this.state.data.items[0]);
-        var id = this.state.data.items[1].can_id;
-        if (this.state && this.state.data) {
-            var render_items = this.state.data.items;
+        console.debug('state', this.state);
+        if (this.state.data === null) {
+          console.warn('loading');
+          return (
+            <main className="container">
+              <h1>Loading</h1>
+            </main>
+          );
         }
+
+        console.log(this.state.data.items[0]);
+        let id = this.state.data.items[1].can_id;
         return (
             <main className="container">
                 <h1>Hello!{id}</h1>

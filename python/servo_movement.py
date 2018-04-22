@@ -34,10 +34,12 @@ def set_servos(can):
         # arduino_serial_data.write(TrashCategories.RECYCLING.value.encode())
         arduino_serial_data.write(RECYCLING_CONFIG)
         # print(arduino_serial_data.readline())
-    
-    fullness_status = arduino_serial_data.read().decode('utf-8').strip()
-    if (fullness_status == 'F'): 
-        fullness_status = arduino_serial_data.read().decode('utf-8').strip()
-    print('updating', fullness_status)
+
+    raw = arduino_serial_data.read()
+    fullness_status = raw.decode('utf-8').strip()
+    if (fullness_status == 'F'):
+        raw = arduino_serial_data.read()
+        fullness_status = raw.decode('utf-8').strip()
+    print('updating', raw, fullness_status)
     update("can_1", FullnessObject(int(fullness_status) != 0))  # hard coding can id
 

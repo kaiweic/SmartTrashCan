@@ -1,11 +1,20 @@
-from python.clarifai_logic import get_items_in_picture
-from python.picture_logic import take_picture
+import os
+import serial
+
+from python.arduino_envs import ArduinoEnv
 
 
-def main():
-    picture_name = take_picture()
-    get_items_in_picture(picture_name)
+arduino_serial_data = serial.Serial(ArduinoEnv.LOG_FILE.value, 9600, timeout=1)
 
-
-if __name__ == "__main__":
-    main()
+while True:
+    if arduino_serial_data.inWaiting():
+        data = arduino_serial_data.readline()
+        print("starting serial")
+        converted_string = data.decode('utf-8').strip()
+        print(converted_string)
+        if converted_string[:len('SERIAL IS AVAILABLE')] == 'SERIAL IS AVAILABLE':
+            print("getting serial data")
+            os.system('python3 python/executor.py')
+            break
+        while arduino_serial_data.inWaiting():
+            arduino_serial_data.readline()

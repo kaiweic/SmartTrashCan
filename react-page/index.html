@@ -83,10 +83,10 @@
        
     <script>
         var map = L.map('mapid', {
-            minZoom: 1,
+            minZoom: 2,
             maxZoom: 4,
-            center: [0, 0],
-            zoom: 4,
+            center: [-15, 25],
+            zoom: 3,
             crs: L.CRS.Simple
         });
         // dimensions of the image
@@ -104,15 +104,18 @@
         map.setMaxBounds(bounds);
         var heat = L.heatLayer([
         [-30, 30, 0.5], // lat, lng, intensity
-        [-35.6, 20.4, 0.5],
-        [-19.6, 17.4, 0.5],
+        [-35.6, 20.4, 0.4],
+        [-19.6, 17.4, 0.2],
         [-15, 36.4, 0.5],
-        [-13.6, 30.4, 0.5],
+        [-20.6, 10.4, 0.7],
         [-20.6, 47.4, 0.5],
-        [-5.6, 33.4, 0.5],
-        [-7.6, 27.4, 0.5],
+        [-5.6, 33.4, 0.55],
+        [-9.6, 7.4, 0.6],
         [-17.6, 40.4, 0.5],
-        ], {radius: 50}).addTo(map);
+        ], {
+          radius: 80,
+          blur: 60
+        }).addTo(map);
     </script>
     <script>
             Array.prototype.forEach.call(document.querySelectorAll('.mdl-card__media'), function(el) {

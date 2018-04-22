@@ -42,7 +42,9 @@ export default class extends React.Component {
         return (
             <main className="container">
                 <h1>Hello React!</h1>
-                <Map/>
+                <div className="container" id="map-container">
+                    <Map/>
+                </div>
             </main>
         );
     }

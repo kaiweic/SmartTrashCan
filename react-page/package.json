@@ -18,6 +18,7 @@
     "react": "^15.3.1",
     "react-dom": "^15.3.1",
     "react-leaflet": "^1.9.1",
+    "simpleheat": "^0.4.0",
     "whatwg-fetch": "^1.0.0"
   },
   "devDependencies": {

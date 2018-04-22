@@ -57,7 +57,7 @@ export default class extends React.Component {
               console.log(previous_items);
               if (previous_items.length > 0) {
                 console.log('Checking if twilio needed');
-                if (previous_items[1].is_full === false && current_fullness.is_full === true) {
+                if (current_fullness.can_id === 'can_1' && previous_items[1].is_full === false && current_fullness.is_full === true) {
                   axios.get('http://localhost:5000/twilio')
                     .then(response => console.log(response))
                 }
@@ -96,12 +96,25 @@ export default class extends React.Component {
           );
         }
 
-        console.log(this.state.data.items[0]);
-        let id = this.state.data.items[1].can_id;
+        let items = this.state.data.items;
+
+        let fulls = items
+          .filter(function (item) {
+            return item.is_full;
+          })
+          .map(function(item) {
+          return  <li key={item.can_id}>
+                    {item.can_id} is full!
+                  </li>
+          // -------------------^^^^^^^^^^^---------^^^^^^^^^^^^^^
+        });
+
         return (
             <main className="container">
-                <h1>Hello!{id}</h1>
-                
+              <h3>Full Trash Cans</h3>
+              <ul>
+                {fulls}
+              </ul>
             </main>
         );
     }

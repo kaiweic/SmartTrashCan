@@ -103,18 +103,19 @@
         // tell leaflet that the map is exactly as big as the image
         map.setMaxBounds(bounds);
         var heat = L.heatLayer([
-        [-30, 30, 0.5], // lat, lng, intensity
-        [-35.6, 20.4, 0.4],
-        [-19.6, 17.4, 0.2],
+        [-30, 30, 0.4], // lat, lng, intensity
+        [-35.6, 20.4, 0.3],
+        [-19.6, 17.4, 0.1],
         [-15, 36.4, 0.5],
-        [-20.6, 10.4, 0.7],
-        [-20.6, 47.4, 0.5],
-        [-5.6, 33.4, 0.55],
-        [-9.6, 7.4, 0.6],
+        [-20.6, 10.4, 0.9],
+        [-20.6, 47.4, 0.6],
+        [-5.6, 33.4, 0.8],
+        [-9.6, 7.4, 0.7],
         [-17.6, 40.4, 0.5],
         ], {
           radius: 80,
-          blur: 60
+          blur: 60,
+          gradient: {0.4: 'green', 0.6: 'red'}
         }).addTo(map);
     </script>
     <script>

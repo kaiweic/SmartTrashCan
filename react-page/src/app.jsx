@@ -14,7 +14,8 @@ import React from "react";
 //simply by importing it's module name
 import "whatwg-fetch";
 
-import firebase from 'firebase'
+import firebase from 'firebase';
+import axios from 'axios'
 
 //import our CSS file
 //Webpack will actually merge the contents
@@ -57,6 +58,16 @@ export default class extends React.Component {
             for (let i = 0; i < Object.keys(root_map).length; i++) {
               let can_id = Object.keys(root_map)[i];
               let current_fullness = root_map[can_id].current_fullness;
+
+              console.log(previous_items);
+              if (previous_items.length > 0) {
+                console.log('Checking if twilio needed');
+                if (previous_items[1].is_full === false && current_fullness.is_full === true) {
+                  axios.get('http://localhost:5000/twilio')
+                    .then(response => console.log(response))
+                }
+              }
+
               current_fullness.can_id = can_id;
               current_items.push(current_fullness);
             }

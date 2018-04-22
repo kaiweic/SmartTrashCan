@@ -2,6 +2,8 @@ import serial
 
 from TrashCategories import TrashCategories
 from arduino_envs import ArduinoEnv
+from firebase import update
+from model.fullness_object import FullnessObject
 
 COMPOST_CONFIG = bytes([67])
 LANDFILL_CONFIG = bytes([76])
@@ -32,3 +34,10 @@ def set_servos(can):
         # arduino_serial_data.write(TrashCategories.RECYCLING.value.encode())
         arduino_serial_data.write(RECYCLING_CONFIG)
         # print(arduino_serial_data.readline())
+    
+    fullness_status = arduino_serial_data.read().decode('utf-8').strip()
+    if (fullness_status == 'F'): 
+        fullness_status = arduino_serial_data.read().decode('utf-8').strip()
+    print('updating', fullness_status)
+    update("can_1", FullnessObject(int(fullness_status) != 0))  # hard coding can id
+

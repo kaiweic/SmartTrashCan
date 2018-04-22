@@ -21,7 +21,7 @@ void setup() {
   servo2.write(0);
   pinMode(trigPin, OUTPUT);
   pinMode(echoPin, INPUT);
-  delay(8000);
+  delay(10000);
   cat = (char)Serial.read();
   Serial.print("F"); // dump the trash in the Serial
 }

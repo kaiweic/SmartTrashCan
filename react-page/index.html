@@ -37,20 +37,6 @@
     <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
     <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
     <script src="./leaflet-heat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/4.13.0/firebase.js"></script>
-    <script>
-      // Initialize Firebase
-      var config = {
-        apiKey: "AIzaSyDLxi0Uiyzdt6Qkjh4wX3uVxWKYn4YdsBQ",
-        authDomain: "smarttrashcan-a731b.firebaseapp.com",
-        databaseURL: "https://smarttrashcan-a731b.firebaseio.com",
-        projectId: "smarttrashcan-a731b",
-        storageBucket: "smarttrashcan-a731b.appspot.com",
-        messagingSenderId: "644066905865"
-      };
-
-      firebase.initializeApp(config);
-    </script>
 </head>
 <body>
         <div class="demo-blog mdl-layout mdl-js-layout has-drawer is-upgraded">
@@ -61,23 +47,22 @@
                       <div class="mdl-card__supporting-text meta mdl-color-text--grey-600">
                         <div class="minilogo"></div>
                         <div>
-                          <strong>The Newist</strong>
-                          <span>2 days ago</span>
+                          <strong>Heatmap of SmartCan Activity</strong>
+                          <span>updated a few moments ago</span>
                         </div>
                       </div>
                     </div>
                     <div class="mdl-card something-else mdl-cell mdl-cell--8-col mdl-cell--4-col-desktop">
                       <button class="mdl-button mdl-js-ripple-effect mdl-js-button mdl-button--fab mdl-color--accent">
-                        <i class="material-icons mdl-color-text--white" role="presentation">add</i>
-                        <span class="visuallyhidden">add</span>
+                        <i class="material-icons mdl-color-text--white" role="presentation">refresh</i>
+                        <span class="visuallyhidden">refresh</span>
                       </button>
                       <div class="mdl-card__media mdl-color--white mdl-color-text--grey-600">
-                        <img src="images/logo.png">
-                        +1,337
+                        <div id="app"></div>
                       </div>
                       <div class="mdl-card__supporting-text meta meta--fill mdl-color-text--grey-600">
                         <div>
-                          <strong>The Newist</strong>
+                          <strong>Cans that are currently full</strong>
                         </div>
                         <ul class="mdl-menu mdl-js-menu mdl-menu--bottom-right mdl-js-ripple-effect" for="menubtn">
                           <li class="mdl-menu__item">About</li>
@@ -95,14 +80,13 @@
                 <div class="mdl-layout__obfuscator"></div>
               </div>
               <a href="https://github.com/google/material-design-lite/blob/mdl-1.x/templates/blog/" target="_blank" id="view-source" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-color--accent mdl-color-text--white">View Firebase</a>
-    <div id="app"></div>
        
     <script>
         var map = L.map('mapid', {
-            minZoom: 1,
+            minZoom: 2,
             maxZoom: 4,
-            center: [0, 0],
-            zoom: 4,
+            center: [-15, 25],
+            zoom: 3,
             crs: L.CRS.Simple
         });
         // dimensions of the image
@@ -119,16 +103,20 @@
         // tell leaflet that the map is exactly as big as the image
         map.setMaxBounds(bounds);
         var heat = L.heatLayer([
-        [-30, 30, 0.5], // lat, lng, intensity
-        [-35.6, 20.4, 0.5],
-        [-19.6, 17.4, 0.5],
+        [-30, 30, 0.4], // lat, lng, intensity
+        [-35.6, 20.4, 0.3],
+        [-19.6, 17.4, 0.1],
         [-15, 36.4, 0.5],
-        [-13.6, 30.4, 0.5],
-        [-20.6, 47.4, 0.5],
-        [-5.6, 33.4, 0.5],
-        [-7.6, 27.4, 0.5],
+        [-20.6, 10.4, 0.9],
+        [-20.6, 47.4, 0.6],
+        [-5.6, 33.4, 0.8],
+        [-9.6, 7.4, 0.7],
         [-17.6, 40.4, 0.5],
-        ], {radius: 50}).addTo(map);
+        ], {
+          radius: 80,
+          blur: 60,
+          gradient: {0.4: 'green', 0.6: 'red'}
+        }).addTo(map);
     </script>
     <script>
             Array.prototype.forEach.call(document.querySelectorAll('.mdl-card__media'), function(el) {

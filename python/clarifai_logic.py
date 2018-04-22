@@ -1,15 +1,20 @@
+import serial
 from clarifai.rest import ClarifaiApp
 from clarifai.rest import Image as ClImage
 import json
 
 from python import env_vars, servo_movement
 from python.TrashCategories import TrashCategories
+from python.arduino_envs import ArduinoEnv
+from python.firebase import update
+from python.model.fullness_object import FullnessObject
 
 recyclables = {"bottle", "plastic", "cup"}
 compost = {"apple", "clementine", "orange", "fruit", "tangerine", "mandarin", "food", "vegetable", "coffee", "knife",
            "fork"}
 
 app = ClarifaiApp(api_key=env_vars.clarifai_api_key)
+arduino_serial_data = serial.Serial(ArduinoEnv.LOG_FILE.value, 9600, timeout=1)
 
 
 def get_items_in_picture(filename, model_type=None):
@@ -49,3 +54,6 @@ def get_items_in_picture(filename, model_type=None):
         print("Trash that shit!")
         servo_movement.set_servos(TrashCategories.LANDFILL)
 
+    fullness_status = int(arduino_serial_data.read().decode('utf-8').strip())
+    if fullness_status == 0:
+        update("can_1", FullnessObject(fullness_status))  # hard coding can id

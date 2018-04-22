@@ -57,7 +57,7 @@ export default class extends React.Component {
               console.log(previous_items);
               if (previous_items.length > 0) {
                 console.log('Checking if twilio needed');
-                if (current_fullness.can_id === 'can_1' && previous_items[1].is_full === false && current_fullness.is_full === true) {
+                if (can_id === 'can_1' && previous_items[1].is_full === false && current_fullness.is_full === true) {
                   axios.get('http://localhost:5000/twilio')
                     .then(response => console.log(response))
                 }

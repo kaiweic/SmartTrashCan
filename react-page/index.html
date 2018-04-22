@@ -102,21 +102,42 @@
         L.imageOverlay(url, bounds).addTo(map);
         // tell leaflet that the map is exactly as big as the image
         map.setMaxBounds(bounds);
-        var heat = L.heatLayer([
-        [-30, 30, 0.4], // lat, lng, intensity
-        [-35.6, 20.4, 0.3],
-        [-19.6, 17.4, 0.1],
-        [-15, 36.4, 0.5],
-        [-20.6, 10.4, 0.9],
-        [-20.6, 47.4, 0.6],
-        [-5.6, 33.4, 0.8],
-        [-9.6, 7.4, 0.7],
-        [-17.6, 40.4, 0.5],
-        ], {
+
+        let data = [
+          [-30, 30, 0.4], // lat, lng, intensity
+          [-35.6, 20.4, 0.3],
+          [-19.6, 17.4, 0.1],
+          [-15, 36.4, 0.5],
+          [-20.6, 10.4, 0.9],
+          [-20.6, 47.4, 0.6],
+          [-5.6, 33.4, 0.8],
+          [-9.6, 7.4, 0.7],
+          [-17.6, 40.4, 0.5],
+        ];
+        let heat = L.heatLayer(data, {
           radius: 80,
           blur: 60,
           gradient: {0.4: 'green', 0.6: 'red'}
-        }).addTo(map);
+        });
+        setInterval(function(){
+          console.log(Math.floor((Math.random()*100)+1));
+
+          data = [
+            [-30, 30, 0.4], // lat, lng, intensity
+            [-35.6, 20.4, Math.abs(Math.random() - 0.5) + 0.25],
+            [-19.6, 17.4, Math.abs(Math.random() - 0.5) + 0.25],
+            [-15, 36.4, 0.5],
+            [-20.6, 10.4, 0.9],
+            [-20.6, 47.4, Math.abs(Math.random() - 0.5) + 0.25],
+            [-5.6, 33.4, 0.8],
+            [-9.6, 7.4, 0.7],
+            [-17.6, 40.4, Math.abs(Math.random() - 0.5) + 0.25],
+          ];
+          heat.setLatLngs(data);
+        }, 10000);
+
+        heat.addTo(map);
+
     </script>
     <script>
             Array.prototype.forEach.call(document.querySelectorAll('.mdl-card__media'), function(el) {

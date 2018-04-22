@@ -17,23 +17,10 @@ import "whatwg-fetch";
 import firebase from 'firebase';
 import axios from 'axios'
 
-//import our CSS file
-//Webpack will actually merge the contents
-//of this file into an inline <style></style>
-//attribute within the <head> section, so that
-//the browser doesn't have to make another
-//network request to get the styles!
-//note that here we start the path with a `.`
-//to signal that this is a relative file
-//path and not a module in our node_modules
-//directory 
-//import "./css/main.css";
-
 export default class extends React.Component {
     constructor(props) {
         super(props);
 
-        const self = this;
 
         // Initialize Firebase
         let config = {
@@ -58,7 +45,7 @@ export default class extends React.Component {
             for (let i = 0; i < Object.keys(root_map).length; i++) {
               let can_id = Object.keys(root_map)[i];
               let current_fullness = root_map[can_id].current_fullness;
-
+              console.log("previous_items:");
               console.log(previous_items);
               if (previous_items.length > 0) {
                 console.log('Checking if twilio needed');
@@ -70,6 +57,8 @@ export default class extends React.Component {
 
               current_fullness.can_id = can_id;
               current_items.push(current_fullness);
+              console.log("current_items:")
+              console.log(current_items);
             }
 
             if (current_items === previous_items) {
@@ -78,22 +67,35 @@ export default class extends React.Component {
             previous_items = current_items;
             current_items = [];
 
-            self.state = {
-              data: {
-                items: previous_items
-              }
-            };
 
-            console.log(self.state);
         });
+        console.log("this guy:")
+        console.log(current_items);
+
+        this.state = {
+            data: {
+              items: current_items
+            }
+          };
+
+        console.log(self.state);
+        console.log(props);
+        //console.log(self.state.data);
     }
 
     render() {
+        console.log(self.state);
+        console.log(this.state);
+        console.log(this.state.data);
+        console.log(this.state.data.items[0]);
+        var id = this.state.data.items[1].can_id;
+        if (this.state && this.state.data) {
+            var render_items = this.state.data.items;
+        }
         return (
             <main className="container">
-                <h1>Hello React!</h1>
-                <div className="container" id="map-container">
-                </div>
+                <h1>Hello!{id}</h1>
+                
             </main>
         );
     }

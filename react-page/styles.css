@@ -25,7 +25,7 @@ body::before {
 @media (min-width: 1025px) and (min-resolution: 1.5dppx),
        (min-width: 2049px) and (max-resolution: 1.5dppx) {
   body::before {
-    background-image: url('images/bg_2880.jpg');
+    background-image: url('images/T-Mobile_US_Coverage_Map.jpg');
   }
 }
 body .demo-blog {
